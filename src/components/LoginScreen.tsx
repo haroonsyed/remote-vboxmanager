@@ -1,15 +1,18 @@
 import React from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react";
 const LoginScreen = () => {
-  const { data: session } = useSession();
+  const attemptLogin = async () => {
+    const session = await getSession();
+    if (!session) {
+      await signIn();
+    }
+  };
 
   React.useEffect(() => {
-    if (!session) {
-      signIn();
-    }
-  }, [session]);
+    attemptLogin();
+  }, []);
 
   return <></>;
 };
 
-export { LoginScreen as LoginButton };
+export { LoginScreen };
