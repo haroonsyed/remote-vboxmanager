@@ -13,7 +13,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (platform == "win32") {
       // run the `ls` command using exec
-      exec(`\"${manager_path}\" list vms`, (err, output) => {
+      exec(`\"${manager_path}\" list runningvms`, (err, output) => {
         if (err) {
           console.error("could not execute command: ", err);
           return res.send(err);
