@@ -1,6 +1,18 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+
+// Add a naive rate limiter
+const MAX_LOGIN_ATTEMPTS = 1000;
+let hitCount = 0;
+
+// Decrease the hit count by 1 every second
+setInterval(() => {
+  if (hitCount > 0) {
+    hitCount--;
+  }
+}, 1000);
+
 export const authOptions = {
   providers: [
     CredentialsProvider({
@@ -10,6 +22,10 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
+        if (hitCount > MAX_LOGIN_ATTEMPTS) {
+          return null;
+        }
+
         const { REMOTE_VBOX_USER, REMOTE_VBOX_PASSWORD } = process.env;
         const isValidUser =
           credentials?.username == REMOTE_VBOX_USER &&

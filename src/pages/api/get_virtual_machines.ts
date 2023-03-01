@@ -2,6 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "./auth/[...nextauth]";
+import { exec } from "node:child_process";
 
 type Data = {
   name: string;
@@ -10,10 +11,24 @@ type Data = {
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerSession(req, res, authOptions);
   if (session) {
-    res.send({
-      content:
-        "This is protected content. You can access this content because you are signed in.",
-    });
+    // For now I will only support windows
+    const platform = process.platform;
+    const manager_path = process.env.VBOX_MANAGE_PATH;
+
+    if (platform == "win32") {
+      // run the `ls` command using exec
+      exec(`\"${manager_path}\" list vms`, (err, output) => {
+        if (err) {
+          console.error("could not execute command: ", err);
+          return;
+        }
+        res.send(output);
+      });
+    } else {
+      res.send({
+        error: "Unsupported platform...",
+      });
+    }
   } else {
     res.send({
       error:
