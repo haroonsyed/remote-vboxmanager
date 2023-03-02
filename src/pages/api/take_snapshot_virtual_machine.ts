@@ -28,8 +28,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     // For now I will only support windows
     const platform = process.platform;
     const manager_path = process.env.VBOX_MANAGE_PATH;
-    const vm_name = req.body.vm_name;
-    const snapshot_name = req.body.snapshot_name;
+    let vm_name = req.body.vm_name;
+    vm_name = vm_name ? vm_name.split(" ")[0] : "";
+    let snapshot_name = req.body.snapshot_name;
+    snapshot_name = snapshot_name ? snapshot_name.split(" ")[0] : "";
 
     const number_of_snapshots = await get_number_of_snapshots(vm_name);
     if (number_of_snapshots > MAX_SNAPSHOTS) {

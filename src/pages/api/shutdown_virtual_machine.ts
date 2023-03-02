@@ -10,7 +10,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     // For now I will only support windows
     const platform = process.platform;
     const manager_path = process.env.VBOX_MANAGE_PATH;
-    const vm_name = req.body.vm_name;
+    let vm_name: string = req.body.vm_name;
+    vm_name = vm_name ? vm_name.split(" ")[0] : "";
 
     if (platform == "win32") {
       // run the `ls` command using exec
