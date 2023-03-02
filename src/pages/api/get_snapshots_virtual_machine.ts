@@ -5,12 +5,12 @@ import { authOptions } from "./auth/[...nextauth]";
 import { exec } from "node:child_process";
 
 const output_to_list = (output: string): string[] => {
-  const vms = output.trim().split("\n");
-  const regex = /"(.+)".+\n?/;
+  const snapshots = output.trim().split("\n");
+  const regex = /Name:\s(\S+).+\n?/;
 
-  return vms.map((vm) => {
-    // Each vm is of form "reptilian_clean" {849ba973-3d1d-40bb-9a68-266349847c48}
-    const matched = vm.match(regex);
+  return snapshots.map((snapshot) => {
+    // Each snapshot is of form: Name: CLEAN (UUID: 7d27be32-9fbf-466e-88cb-808f10bc64e4) *
+    const matched = snapshot.match(regex);
     return matched ? matched[1] : "";
   });
 };
@@ -21,13 +21,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     // For now I will only support windows
     const platform = process.platform;
     const manager_path = process.env.VBOX_MANAGE_PATH;
+    let vm_name = req.body.vm_name;
+    vm_name = vm_name ? vm_name.split(" ")[0] : "";
 
     if (platform == "win32") {
       // run the `ls` command using exec
-      exec(`\"${manager_path}\" list vms`, (err, output) => {
+      exec(`\"${manager_path}\" snapshot ${vm_name} list`, (err, output) => {
         if (err) {
           console.error("could not execute command: ", err);
-          return res.json(err);
+          return res.json({ error: err });
         }
         res.json(output_to_list(output));
       });

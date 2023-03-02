@@ -4,6 +4,17 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "./auth/[...nextauth]";
 import { exec } from "node:child_process";
 
+const output_to_list = (output: string): string[] => {
+  const vms = output.trim().split("\n");
+  const regex = /"(.+)".+\n?/;
+
+  return vms.map((vm) => {
+    // Each vm is of form "reptilian_clean" {849ba973-3d1d-40bb-9a68-266349847c48}
+    const matched = vm.match(regex);
+    return matched ? matched[1] : "";
+  });
+};
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerSession(req, res, authOptions);
   if (session) {
@@ -18,7 +29,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           console.error("could not execute command: ", err);
           return res.json(err);
         }
-        res.json(output);
+        res.json(output_to_list(output));
       });
     } else {
       res.json({
