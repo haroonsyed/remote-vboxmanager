@@ -1,18 +1,26 @@
-import React from "react";
+import React, { PropsWithChildren } from "react";
 import { signIn, getSession } from "next-auth/react";
-const LoginScreen = () => {
+import LoadingScreen from "./LoadingScreen";
+const RequireLogin: React.FC<PropsWithChildren> = (props) => {
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+
   const attemptLogin = async () => {
     const session = await getSession();
     if (!session) {
       await signIn();
     }
+    setIsLoggedIn(true);
   };
 
   React.useEffect(() => {
     attemptLogin();
   }, []);
 
-  return <></>;
+  if (isLoggedIn) {
+    return <>{props.children}</>;
+  } else {
+    return <LoadingScreen />;
+  }
 };
 
-export { LoginScreen };
+export { RequireLogin as LoginScreen };

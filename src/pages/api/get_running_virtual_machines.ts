@@ -16,17 +16,17 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       exec(`\"${manager_path}\" list runningvms`, (err, output) => {
         if (err) {
           console.error("could not execute command: ", err);
-          return res.send(err);
+          return res.json(err);
         }
-        res.send(output);
+        res.json(output);
       });
     } else {
-      res.send({
+      res.json({
         error: "Unsupported platform...",
       });
     }
   } else {
-    res.send({
+    res.json({
       error:
         "You must be signed in to view the protected content on this page.",
     });

@@ -35,7 +35,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     const number_of_snapshots = await get_number_of_snapshots(vm_name);
     if (number_of_snapshots > MAX_SNAPSHOTS) {
-      return res.send({ error: "Too many snapshots taken!" });
+      return res.json({ error: "Too many snapshots taken!" });
     }
 
     if (platform == "win32") {
@@ -46,16 +46,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           if (err) {
             console.error("could not execute command: ", err);
           }
-          return res.send(err);
+          return res.json(err);
         }
       );
     } else {
-      res.send({
+      res.json({
         error: "Unsupported platform...",
       });
     }
   } else {
-    res.send({
+    res.json({
       error:
         "You must be signed in to view the protected content on this page.",
     });

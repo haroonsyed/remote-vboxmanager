@@ -21,16 +21,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           if (err) {
             console.error("could not execute command: ", err);
           }
-          return res.send(err);
+          return res.json(err);
         }
       );
     } else {
-      res.send({
+      res.json({
         error: "Unsupported platform...",
       });
     }
   } else {
-    res.send({
+    res.json({
       error:
         "You must be signed in to view the protected content on this page.",
     });
