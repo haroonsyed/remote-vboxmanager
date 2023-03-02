@@ -1,11 +1,8 @@
 import React from "react";
 
-const useFetch = <T>(
-  fetch_function: () => Promise<object>,
-  dependencies: any[]
-) => {
+const useFetch = <T>(fetch_function: () => Promise<T>, dependencies: any) => {
   const [isLoading, setIsLoading] = React.useState(false);
-  const [data, setData] = React.useState({});
+  const [data, setData] = React.useState(null as T);
 
   React.useEffect(() => {
     fetch_function().then((fetch_data) => {
