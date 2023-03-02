@@ -1,6 +1,6 @@
 import React from "react";
 
-const useFetch = (
+const useFetch = <T>(
   fetch_function: () => Promise<object>,
   dependencies: any[]
 ) => {

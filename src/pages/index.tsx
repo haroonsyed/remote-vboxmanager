@@ -4,7 +4,7 @@ import { useFetch } from "@/hooks/useFetch";
 
 export default function Home() {
   const { isLoading, data: virtual_machines } = useFetch(
-    get_virtual_machines,
+    get_virtual_machines(),
     []
   );
 
