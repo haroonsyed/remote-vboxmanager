@@ -1,4 +1,5 @@
 import { LoginScreen } from "@/components/LoginScreen";
+import NavBar from "@/components/NavBar";
 import { get_virtual_machines } from "@/fetch/get_virtual_machines";
 import { useFetch } from "@/hooks/useFetch";
 
@@ -11,8 +12,8 @@ export default function Home() {
   console.log(virtual_machines);
 
   return (
-    <>
-      <h1>Welcome to Sshawarma's Remote VBOXManager</h1>
-    </>
+    <div className="bg-gray-800 flex flex-col min-h-screen">
+      <NavBar />
+    </div>
   );
 }
