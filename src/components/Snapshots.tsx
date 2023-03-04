@@ -2,6 +2,7 @@ import { get_snapshots_virtual_machine } from "@/fetch/get_snapshots_virtual_mac
 import { restore_snapshot_virtual_machine } from "@/fetch/restore_snapshot_virtual_machine";
 import { useFetch } from "@/hooks/useFetch";
 import React from "react";
+import Modal from "./Modal";
 
 type props = {
   vm_name: string;
@@ -11,6 +12,7 @@ type props = {
 const Snapshots: React.FC<props> = (props) => {
   const { vm_name, isHidden } = props;
   const [statusRefreshCount, setStatusRefreshCount] = React.useState(0);
+  const [alert, setAlert] = React.useState<null | string>(null);
   const { isLoading, data: snapshots } = useFetch(
     get_snapshots_virtual_machine(vm_name),
     [statusRefreshCount]
@@ -22,6 +24,13 @@ const Snapshots: React.FC<props> = (props) => {
     }, 7000);
     return () => clearInterval(interval);
   }, []);
+
+  const displayAlert = (alert_msg: string) => {
+    setAlert(alert_msg);
+    setTimeout(() => {
+      setAlert(null);
+    }, 5000);
+  };
 
   if (isHidden) {
     return <></>;
@@ -35,6 +44,9 @@ const Snapshots: React.FC<props> = (props) => {
 
   const handleRestoreButtonClick = async (snapshot_name: string) => {
     await restore_snapshot_virtual_machine(vm_name, snapshot_name)();
+    displayAlert(
+      `Snapshot ${snapshot_name} for ${vm_name.toUpperCase()} restored!`
+    );
   };
 
   return (
@@ -63,6 +75,7 @@ const Snapshots: React.FC<props> = (props) => {
             {index != snapshots.length - 1 && <div className="border" />}
           </>
         ))}
+      {alert && <Modal text={alert} />}
     </div>
   );
 };
