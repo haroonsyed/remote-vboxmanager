@@ -25,7 +25,7 @@ const SnapshotAdder: React.FC<props> = (props) => {
         ref={snapshotInputRef}
       />
       <button
-        className="px-5 bg-blue-500 hover:bg-blue-400 h-8 flex rounded ml-auto mr-5 items-center"
+        className="px-5 bg-blue-500 hover:bg-blue-400 h-8 flex rounded ml-auto mr-8 items-center"
         onClick={handleTakeSnapshotClick}
       >
         Take Snapshot

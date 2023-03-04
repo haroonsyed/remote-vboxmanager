@@ -8,6 +8,10 @@ const output_to_list = (output: string): string[] => {
   const snapshots = output.trim().split("\n");
   const regex = /Name:\s(\S+).+\n?/;
 
+  if (output.includes("This machine does not have any snapshots")) {
+    return [];
+  }
+
   return snapshots.map((snapshot) => {
     // Each snapshot is of form: Name: CLEAN (UUID: 7d27be32-9fbf-466e-88cb-808f10bc64e4) *
     const matched = snapshot.match(regex);
@@ -15,6 +19,7 @@ const output_to_list = (output: string): string[] => {
   });
 };
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerSession(req, res, authOptions);
   if (session) {

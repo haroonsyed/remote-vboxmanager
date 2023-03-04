@@ -43,35 +43,36 @@ const Snapshots: React.FC<props> = (props) => {
     );
   };
 
+  console.log(snapshots);
+
   return (
-    <div className="snapshots-container ml-5 bg-slate-600 items-center  text-white font-semibold">
-      {snapshots &&
-        snapshots.map((snapshot, index) => (
-          <>
-            <div
-              className="snapshot flex items-center h-12 w-full "
-              key={snapshot}
-            >
-              <div className="h1 ml-5 font-bold">{snapshot}</div>
-              <button
-                className="ml-auto text-center bg-red-600 hover:bg-red-500 flex rounded px-2 h-7"
-                onClick={() => handleDeleteButtonClick(snapshot)}
-              >
-                Delete Snapshot
-              </button>
-              <button
-                className="mx-3 text-center bg-green-500 hover:bg-green-400 flex rounded px-2 h-7"
-                onClick={() => handleRestoreButtonClick(snapshot)}
-              >
-                Restore Snapshot
-              </button>
+    <>
+      <div className="snapshots-container ml-5 bg-slate-600 items-center text-white font-semibold">
+        {Array.isArray(snapshots) &&
+          snapshots.map((snapshot, index) => (
+            <div className="snapshot-container" key={snapshot}>
+              <div className="snapshot flex items-center h-12 w-full ">
+                <div className="h1 ml-5 font-bold">{snapshot}</div>
+                <button
+                  className="ml-auto text-center bg-red-600 hover:bg-red-500 flex rounded px-2 h-7"
+                  onClick={() => handleDeleteButtonClick(snapshot)}
+                >
+                  Delete Snapshot
+                </button>
+                <button
+                  className="mx-3 text-center bg-green-500 hover:bg-green-400 flex rounded px-2 h-7"
+                  onClick={() => handleRestoreButtonClick(snapshot)}
+                >
+                  Restore Snapshot
+                </button>
+              </div>
+              {index != snapshots.length - 1 && <div className="border" />}
             </div>
-            {index != snapshots.length - 1 && <div className="border" />}
-          </>
-        ))}
+          ))}
+        <SnapshotAdder vm_name={vm_name} />
+      </div>
       <Modal text={alert} />
-      <SnapshotAdder vm_name={vm_name} />
-    </div>
+    </>
   );
 };
 

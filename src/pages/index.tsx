@@ -15,10 +15,14 @@ export default function Home() {
   return (
     <div className="bg-gray-800 flex flex-col min-h-screen">
       <NavBar />
-      <div className="vm_container w-11/12 flex items-center mx-auto mt-10">
+      <div className="container w-11/12 items-center mx-auto mt-10">
         {virtual_machines &&
           virtual_machines.map((vm_name) => {
-            return <VirtualMachine vm_name={vm_name} key={vm_name} />;
+            return (
+              <div className="vm_container mb-10" key={vm_name}>
+                <VirtualMachine vm_name={vm_name} />
+              </div>
+            );
           })}
       </div>
     </div>
