@@ -5,7 +5,26 @@ type props = {
 };
 
 const Modal: React.FC<props> = (props) => {
+  const [shouldDisplay, setShouldDisplay] = React.useState(false);
   const { text } = props;
+
+  React.useEffect(() => {
+    if (text) {
+      setShouldDisplay(true);
+    }
+
+    const timeout = setTimeout(() => {
+      setShouldDisplay(false);
+    }, 5000);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [text]);
+
+  if (!shouldDisplay) {
+    return <></>;
+  }
 
   return (
     <>
