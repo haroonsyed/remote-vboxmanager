@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "./auth/[...nextauth]";
 import { exec } from "node:child_process";
+import { exec_async } from "./util/execute_command";
 
 const output_to_list = (output: string): string[] => {
   const snapshots = output.trim().split("\n");
@@ -30,21 +31,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     vm_name = vm_name ? vm_name.split(" ")[0] : "";
 
     if (platform == "win32") {
-      // run the `ls` command using exec
-      exec(`\"${manager_path}\" snapshot ${vm_name} list`, (err, output) => {
-        if (err) {
-          console.error("could not execute command: ", err);
-          return res.json({ error: err });
-        }
-        res.json(output_to_list(output));
-      });
+      const { stderr: err, stdout: output } = await exec_async(
+        `\"${manager_path}\" snapshot ${vm_name} list`
+      );
+      if (err) {
+        console.error("could not execute command: ", err);
+        return res.status(500).json({ error: err });
+      }
+      return res.status(200).json(output_to_list(output));
     } else {
-      res.json({
+      return res.status(500).json({
         error: "Unsupported platform...",
       });
     }
   } else {
-    res.json({
+    return res.status(400).json({
       error:
         "You must be signed in to view the protected content on this page.",
     });
