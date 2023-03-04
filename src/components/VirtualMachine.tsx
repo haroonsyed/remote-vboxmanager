@@ -19,7 +19,7 @@ const VirtualMachine: React.FC<props> = (props) => {
   const { vm_name } = props;
 
   const [statusRefreshCount, setStatusRefreshCount] = React.useState(0);
-  const [showSnapshots, setShowSnapshots] = React.useState(true);
+  const [hideSnapshots, setShowSnapshots] = React.useState(false);
 
   React.useEffect(() => {
     const interval = setInterval(() => {
@@ -41,21 +41,21 @@ const VirtualMachine: React.FC<props> = (props) => {
   };
 
   const handleStopClick = async () => {
-    poweroff_virtual_machine(vm_name)();
+    await poweroff_virtual_machine(vm_name)();
   };
 
   return (
     <div className="snapshot-container w-full">
-      <div className="mx-auto h-20 w-full bg-slate-700 mb-5 flex items-center px-5 rounded text-white font-bold font-sans">
+      <div className="mx-auto h-20 w-full bg-slate-700 flex items-center px-5 rounded text-white font-bold font-sans">
         {/* Show Snapshot Toggle */}
-        {showSnapshots ? (
-          <ChevronUpIcon
-            className="h-6 y-6 mr-2 mt-0.5 cursor-pointer"
+        {hideSnapshots ? (
+          <ChevronDownIcon
+            className="h-6 y-6 mr-2 mb-0.5 mt-0.5 cursor-pointer"
             onClick={() => setShowSnapshots((prev) => !prev)}
           />
         ) : (
-          <ChevronDownIcon
-            className="h-6 y-6 mr-2 mt-0.5 cursor-pointer"
+          <ChevronUpIcon
+            className="h-6 y-6 mr-2 mb-0.5 mt-0.5 cursor-pointer"
             onClick={() => setShowSnapshots((prev) => !prev)}
           />
         )}
@@ -85,7 +85,7 @@ const VirtualMachine: React.FC<props> = (props) => {
           onClick={handleStartClick}
         />
       </div>
-      {showSnapshots && <Snapshots />}
+      <Snapshots vm_name={vm_name} isHidden={hideSnapshots} />
     </div>
   );
 };
