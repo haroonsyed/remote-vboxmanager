@@ -12,19 +12,11 @@ type props = {
 
 const Snapshots: React.FC<props> = (props) => {
   const { vm_name, isHidden } = props;
-  const [statusRefreshCount, setStatusRefreshCount] = React.useState(0);
   const [alert, setAlert] = React.useState<string>("");
   const { isLoading, data: snapshots } = useFetch(
     get_snapshots_virtual_machine(vm_name),
-    [statusRefreshCount]
+    []
   );
-
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      setStatusRefreshCount((prev) => prev + 1);
-    }, 7000);
-    return () => clearInterval(interval);
-  }, []);
 
   if (isHidden) {
     return <></>;

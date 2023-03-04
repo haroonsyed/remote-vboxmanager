@@ -2,7 +2,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "./auth/[...nextauth]";
-import { exec } from "node:child_process";
 import { exec_async } from "./util/execute_command";
 
 const output_to_list = (output: string): string[] => {
