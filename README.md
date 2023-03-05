@@ -1,38 +1,82 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Remote VirtualBox Manager
+
+This is an application to manage virtualbox machines remotely via a web brower.
+
+![Dashboard](./docs/dashboard.png)
 
 ## Getting Started
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+1. Clone this repository<br/>
+   ```bash
+   git clone https://github.com/haroonsyed/remote-vboxmanager.git
+   ```
+2. Install the dependencies<br/>
+   ```bash
+   npm install
+   # or
+   yarn install
+   # or
+   pnpm install
+   ```
+3. Setup the environment variables
+   ```env
+   REMOTE_VBOX_USER=username
+   REMOTE_VBOX_PASSWORD=password
+   REMOTE_VBOX_SECRET=secret key for jwt
+   VBOX_MANAGE_PATH=C:\Program Files\Oracle\VirtualBox\VBoxManage.exe // Path if running on windows
+   NEXTAUTH_URL=http://localhost:3000 // The url should match baseurl
+   ```
+4. Start the server (use start for production)
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   # or
+   pnpm dev
+   ```
+5. Port forward, and/or put behind a reverse proxy to have domain/ssl support (a good idea to protect user/password).
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Tech Stack
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- NextJS
+- Tailwind CSS
+- NextAuth
+- Typescript
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Need
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+A friend running an apple silicon mac could not run an x64 ubuntu OS for their classwork. I was running the VM remotely so they could ssh, but when the server crashed, or kernel edits made that broke the OS, it could not be managed without me manually restoring.<br/>
 
-## Learn More
+As a temporary solution, I was giving remote access to my full personal computer. So instead I decided to give secure remote access via a limited web interface.
 
-To learn more about Next.js, take a look at the following resources:
+The requirements are outlined below:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Run on windows (I don't have a dedicated linux host to run this in)
+- See status of server
+- Start Server
+- Stop Server
+- Take snapshots of server
+- Restore snapshots of server
+- Be secure and not affect personal computer
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+There are existing solutions, but setting up a XAMP server was tedious, system-heavy, and I was getting random php errors on windows (not very plug and play). I also wanted to keep the scope of the application limited.
 
-## Deploy on Vercel
+## Features
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Secure login with rate limitations to avoid brute force attack
+- A simple, clean UI that looks modern
+- Ability to view running status of servers
+- Start and Stop servers
+- Take snapshots of servers
+- Restore snapshots of servers
+- Automatic refresh
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Limitations
+
+I created this application for a specific need, and it has a very narrow scope. I do not plan on adding more features like changing resources, networking settings, hdd settings and automatic logging/reporting.
+
+At that point linux should be used with one of the following tools: <br/>
+https://github.com/phpvirtualbox/phpvirtualbox<br/>
+http://knobgoblin.org.uk/
