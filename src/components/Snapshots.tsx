@@ -8,14 +8,15 @@ import SnapshotAdder from "./SnapshotAdder";
 type props = {
   vm_name: string;
   isHidden: boolean;
+  statusRefreshCount: number;
 };
 
 const Snapshots: React.FC<props> = (props) => {
-  const { vm_name, isHidden } = props;
+  const { vm_name, isHidden, statusRefreshCount } = props;
   const [alert, setAlert] = React.useState<string>("");
   const { isLoading, data: snapshots } = useFetch(
     get_snapshots_virtual_machine(vm_name),
-    []
+    [statusRefreshCount]
   );
 
   if (isHidden) {

@@ -10,6 +10,7 @@ import { get_running_virtual_machines } from "@/fetch/get_running_virtual_machin
 import { start_virtual_machine } from "@/fetch/start_virtual_machine";
 import { poweroff_virtual_machine } from "@/fetch/poweeroff_virtual_machine";
 import Snapshots from "./Snapshots";
+import Modal from "./Modal";
 
 type props = {
   vm_name: string;
@@ -18,6 +19,7 @@ type props = {
 const VirtualMachine: React.FC<props> = (props) => {
   const { vm_name } = props;
 
+  const [modalText, setModalText] = React.useState("");
   const [statusRefreshCount, setStatusRefreshCount] = React.useState(0);
   const [hideSnapshots, setShowSnapshots] = React.useState(false);
 
@@ -38,10 +40,12 @@ const VirtualMachine: React.FC<props> = (props) => {
 
   const handleStartClick = async () => {
     await start_virtual_machine(vm_name)();
+    setModalText(`Started vm ${vm_name}`);
   };
 
   const handleStopClick = async () => {
     await poweroff_virtual_machine(vm_name)();
+    setModalText(`Stopped vm ${vm_name}`);
   };
 
   return (
@@ -85,7 +89,12 @@ const VirtualMachine: React.FC<props> = (props) => {
           onClick={handleStartClick}
         />
       </div>
-      <Snapshots vm_name={vm_name} isHidden={hideSnapshots} />
+      <Snapshots
+        vm_name={vm_name}
+        isHidden={hideSnapshots}
+        statusRefreshCount={statusRefreshCount}
+      />
+      <Modal text={modalText} />
     </div>
   );
 };
