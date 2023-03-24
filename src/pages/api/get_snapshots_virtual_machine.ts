@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "./auth/[...nextauth]";
 import { exec } from "node:child_process";
 import { exec_async } from "./util/execute_command";
+import { clean_input } from "./util/clean_input";
 
 const output_to_list = (output: string): string[] => {
   const snapshots = output.trim().split("\n");
@@ -28,7 +29,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const platform = process.platform;
     const manager_path = process.env.VBOX_MANAGE_PATH;
     let vm_name = req.body.vm_name;
-    vm_name = vm_name ? vm_name.split(" ")[0] : "";
+    vm_name = clean_input(vm_name);
 
     if (platform == "win32") {
       const { stderr: err, stdout: output } = await exec_async(
